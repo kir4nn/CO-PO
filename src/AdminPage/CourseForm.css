@@ -1,0 +1,30 @@
+.CourseForm {
+    margin-bottom: 20px;
+  }
+  
+  .CourseForm h2 {
+    color: #333;
+  }
+  
+  .CourseForm input[type="text"] {
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .CourseForm button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .CourseForm button:hover {
+    background-color: #45a049;
+  }
+  

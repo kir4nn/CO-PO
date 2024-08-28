@@ -1,0 +1,26 @@
+.BulkStudentUpload {
+    margin-bottom: 20px;
+  }
+  
+  .BulkStudentUpload h2 {
+    color: #333;
+  }
+  
+  .BulkStudentUpload input[type="file"] {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .BulkStudentUpload button {
+    padding: 10px 20px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .BulkStudentUpload button:hover {
+    background-color: #007bb5;
+  }
+  

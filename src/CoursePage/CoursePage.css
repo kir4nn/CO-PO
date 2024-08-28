@@ -1,0 +1,73 @@
+.CoursePage {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .CoursePage h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .course-data {
+    margin-bottom: 20px;
+  }
+  
+  .course-data ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .course-data li {
+    padding: 8px 0;
+    color: #555;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .copo-matrix {
+    margin: 20px 0;
+  }
+  
+  .copo-matrix table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .copo-matrix th, .copo-matrix td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .copo-matrix th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  .avg-co-attainment ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .avg-co-attainment li {
+    padding: 8px 0;
+    color: #555;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .CoursePage button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .CoursePage button:hover {
+    background-color: #007bb5;
+  }
+  

@@ -1,0 +1,20 @@
+.PODisplay {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .PODisplay h2 {
+    color: #333;
+  }
+  
+  .PODisplay ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .PODisplay li {
+    padding: 8px 0;
+    color: #555;
+    border-bottom: 1px solid #ccc;
+  }
+  

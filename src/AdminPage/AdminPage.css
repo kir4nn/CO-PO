@@ -1,0 +1,29 @@
+.AdminPage {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.AdminPage h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.admin-buttons a {
+  text-decoration: none;
+  color: white;
+  background-color: #4CAF50;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.admin-buttons a:hover {
+  background-color: #45a049;
+}
