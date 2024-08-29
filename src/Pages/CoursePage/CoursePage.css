@@ -1,9 +1,9 @@
 .CoursePage {
-    text-align: center;
+    /* text-align: center;
     padding: 20px;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 8px; */
   }
   
   .CoursePage h1 {
@@ -57,7 +57,7 @@
     border-bottom: 1px solid #ccc;
   }
   
-  .CoursePage button {
+  /* .CoursePage button {
     padding: 10px 20px;
     margin-top: 20px;
     background-color: #008CBA;
@@ -65,9 +65,9 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
+  } */
   
-  .CoursePage button:hover {
+  /* .CoursePage button:hover {
     background-color: #007bb5;
-  }
+  } */
   

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './BulkStudentUpload.css';
 
-function BulkStudentUpload() {
+const BulkStudentUpload = () => {
   const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {

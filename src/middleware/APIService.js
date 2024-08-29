@@ -13,11 +13,12 @@ const API = {
             
         }
     },
-    addCourse: async() => {
+    addCourse: async({courseName, courseId, CO_PO_Matrix}) => {
         try {
-            
+            const response = await api.post()
+            return response.data;
         } catch (error) {
-            
+            throw error
         }
     },
 

@@ -84,26 +84,24 @@ function CoursePage() {
 
   return (
     <div className="CoursePage">
-      <h1>Course Dashboard</h1>
+      <h1 className="text-3xl font-bold dark:text-white">Course Title</h1>
 
-      <div className="add-course">
-        <h2>Add New Course</h2>
-        <input
-          type="text"
-          placeholder="Course Name"
-          value={newCourse.name}
-          onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="CO Attainment (comma-separated)"
-          value={newCourse.coAttainment}
-          onChange={(e) => setNewCourse({ ...newCourse, coAttainment: e.target.value })}
-        />
-        <button onClick={addCourse}>Add Course</button>
+
+
+      <div className="">
+      <h5 class="text-xl font-bold dark:text-white">Add New Test</h5>
+       
+       <div className="">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload CSV file</label>
+        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" />
+       </div>
+       <button type="button" class="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+       Add Test
+       </button>
       </div>
 
-      <div className="course-data">
+      <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+      {/* <div className="course-data">
         <h2>Courses</h2>
         <ul>
           {courses.map((course) => (
@@ -112,9 +110,9 @@ function CoursePage() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
 
-      <button onClick={() => setShowCOPO(!showCOPO)}>
+      <button onClick={() => setShowCOPO(!showCOPO)} className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
         {showCOPO ? 'Hide CO-PO Conversion Matrix' : 'Show CO-PO Conversion Matrix'}
       </button>
       {showCOPO && (
@@ -171,7 +169,7 @@ function CoursePage() {
         </div>
       )}
 
-      <button onClick={() => setShowAvgCO(!showAvgCO)}>
+      <button onClick={() => setShowAvgCO(!showAvgCO)} className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
         {showAvgCO ? 'Hide Average CO Attainment' : 'Show Average CO Attainment'}
       </button>
       {showAvgCO && (
