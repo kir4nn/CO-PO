@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 
 require('dotenv').config();
 
-const Test = require("./TestSchema"); // Replace with the actual file path where your Bill model is defined
-const Department = require("./DeptSchema"); // Replace with the actual file path where your UserHistory model is defined
+const Test = require("./TestSchema"); 
+const Department = require("./DeptSchema"); 
 const Course = require('./CourseSchema');
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -67,4 +67,41 @@ if (!Array.isArray(CO_PO_matrix) || CO_PO_matrix.length !== 5) {
     }
   });
 
+app.post('/addTest', async (req, res) => {
+    const { courseId, testId, data } = req.body;  
+   if (!courseId || !testId || !data) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    // Validate data (assuming it's a 2D array)
+    if (!Array.isArray(data) || !data.every(row => Array.isArray(row))) {
+      return res.status(400).json({ error: 'Data must be a 2D array' });
+    }  
+    let numCols = data[0].length
+    for (const row of data) {
+        if (row.length !== numCols) {
+          return res.status(400).json({error: 'Data must be a rectangular matrix'});
+        }
+    }
 
+    try {
+      const newTest = new Test({
+        courseId,
+        testId,
+        data
+      });
+      // Save the document (triggers the pre-save middleware)
+      const savedTest = await newTest.save();
+
+      const course = await Course.findOne({ courseId });
+      if (!course) {
+        return res.status(404).json({ error: 'Course not found' });
+      }
+  
+      course.tests.push(savedTest._id);
+      await course.save();
+
+      res.status(201).json({ message: 'Test added successfully && course data updated', test: newTest });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
