@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import API from '../middleware/APIService';
 import './CourseForm.css';
 
 function CourseForm() {
   const [courseName, setCourseName] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // Implement course addition logic here
     console.log('Adding course:', courseName);
+    // const data = await API.addCourse();
     setCourseName('');
   };
 

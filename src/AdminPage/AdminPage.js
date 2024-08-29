@@ -10,7 +10,7 @@ function AdminPage() {
     <div className="AdminPage">
       <h1>Admin Dashboard</h1>
       <div className="admin-buttons">
-        <Link to="/admin/bulk-upload">Bulk Student Upload</Link>
+        {/* <Link to="/admin/bulk-upload">Bulk Student Upload</Link> */}
         <Link to="/admin/add-course">Add Course</Link>
         <Link to="/admin/display-po">Display PO</Link>
       </div>
