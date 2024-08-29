@@ -14,20 +14,20 @@ const testSchema = new mongoose.Schema({
       required: true
     },
     CO1: {
-      avgValScored: Number,  // Calculated field
-      totalVal: Number       // Calculated field
+      avgAttainment: Number,  // Calculated field
+      maxMarks: Number       // Calculated field
     },
     CO2: {
-      avgValScored: Number,  // Calculated field
-      totalVal: Number       // Calculated field
+    avgAttainment: Number,  // Calculated field
+      maxMarks: Number       // Calculated field
     },
     CO3: {
-      avgValScored: Number,  // Calculated field
-      totalVal: Number       // Calculated field
+        avgAttainment: Number,  // Calculated field
+      maxMarks: Number       // Calculated field
     },
     CO4: {
-      avgValScored: Number,  // Calculated field
-      totalVal: Number       // Calculated field
+        avgAttainment: Number,  // Calculated field
+      maxMarks: Number       // Calculated field
     }
   });
   
