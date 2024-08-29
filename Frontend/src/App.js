@@ -29,24 +29,5 @@ function App() {
   );
 }
 
-function HomePage() {
-  return (
-    <>
-      {/* <h1>CO-PO Calculation for 2024 Batch</h1> */}
-      <div className="card">
-        <nav>
-          <ul>
-            <li>
-              <Link to="/admin">Admin Page</Link>
-            </li>
-            <li>
-              <Link to="/course">Course Page</Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </>
-  );
-}
 
 export default App;
