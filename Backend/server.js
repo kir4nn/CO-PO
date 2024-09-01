@@ -26,6 +26,7 @@ app.get('/sayHi', (req, res) => {
 });
 
 app.post('/addCourse', async (req, res) => {
+  console.log('hit')
     const { courseName, courseId, CO_PO_matrix } = req.body;  
     if (!courseName || !courseId || !CO_PO_matrix) {
       return res.status(400).json({ error: 'Missing required fields' });
