@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
-import BulkStudentUpload from './BulkStudentUpload';
 import CourseForm from './Courses';
 import PODisplay from './PODisplay';
 import './AdminPage.css';
