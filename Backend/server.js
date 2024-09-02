@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyparser.json());
 
-const PORT = 5000;
+const PORT = process.env.LOCAL_PORT || 5000;
 
 app.listen(PORT, () => console.log(`Hello World ${PORT}`));
 
@@ -26,7 +26,6 @@ app.get('/sayHi', (req, res) => {
 });
 
 app.post('/addCourse', async (req, res) => {
-  console.log('hit')
     const { courseName, courseId, CO_PO_matrix } = req.body;  
     if (!courseName || !courseId || !CO_PO_matrix) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -101,8 +100,85 @@ app.post('/addTest', async (req, res) => {
       course.tests.push(savedTest._id);
       await course.save();
 
-      res.status(201).json({ message: 'Test added successfully && course data updated', test: newTest });
+      res.status(201).json({ success: true, message: 'Test added successfully && course data updated', test: newTest });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   });
+
+app.get('/calculatePO', async (req,res)=> {
+   // const {DeptCode} = req.body; //refer to CS dept usually
+   // console.log(DeptCode);
+    try{
+    const courses = await Course.find(); // Fetch all courses from the database
+
+    /*
+    const department = await Department.findOneAndUpdate(
+        { DeptCode: DeptCode },
+        { new: true, upsert: true } // Create if not exists, return the updated document
+      );
+      */
+    PO_arr = [0,0,0,0,0,0,0,0,0,0,0,0]; //array of 12 integers
+    PO_denominator = [0,0,0,0,0,0,0,0,0,0,0,0];
+    courses.forEach(course=> {
+//        console.log(course);
+        let avg = (course.CO1_attainment+course.CO2_attainment+course.CO3_attainment+course.CO4_attainment)/4;
+        console.log(avg);
+        for(let i=0; i<PO_arr.length; i++){
+            PO_arr[i] += course.PO_mapping[i] * avg;
+            PO_denominator[i] += course.PO_mapping[i];
+        }
+    });
+    let document = {};
+    for(let i=0; i<12; i++)
+        if(i<10)
+            document[`PO${i+1}`] = PO_arr[i] / PO_denominator[i];
+        else
+            document[`PSO${i%10+1}`] = PO_arr[i]/PO_denominator[i];
+    
+    for(const key in document){
+        document[key] = parseFloat((document[key]*100).toFixed(2));
+    }
+    res.status(201).json({ message: 'PO computed', data: document });
+    }
+    catch(err){
+        res.status(500).json({ error: err.message });     
+    }
+});
+
+app.get('/getAllCourses', async (req,res)=> {
+  
+  console.log('[INFO] GET request at /getAllCourses')
+
+  try{
+    const courses = await Course.find();
+    res.status(201).json({data: courses});
+  }
+  catch (err){
+    res.status(500).json({error: err.message});
+  }
+  
+});
+
+app.get('/getCourse', async(req, res) => {
+  console.log('[INFO] GET request at /getCourse') 
+
+  const { courseId } = req.query;
+
+  if (!courseId) {
+    return res.status(400).json({ error: 'Course ID is required' });
+  }
+
+  try {
+    const course = await Course.findOne({ courseId });
+
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+
+    res.status(200).json(course);
+  } catch (error) {
+    console.error('Error fetching course:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the course' });
+  }
+})

@@ -18,11 +18,23 @@ function CoursePage() {
   const [csvData, setCsvData] = useState(null);
   const [testId, setTestId] = useState("")
 
+  const [course, setCourse] = useState(null)
+  
+
   useEffect(() => {
-    // Fetch courses from backend
-    fetchCourses();
-    // Fetch CO-PO matrix from backend
-    fetchCOPOMatrix();
+    const fetch = async() => {
+
+      try {
+        const res = await API.getCourse(courseId)
+        console.log('Course: ', res)
+        setCourse(res)
+      } catch (error) {
+        console.log('[ERR] Unable to fetch course')
+      }
+      
+    }
+
+    fetch()
   }, []);
 
   useEffect(()=>{
@@ -44,7 +56,7 @@ function CoursePage() {
 
   const formatData = (data) => {
     const formattedData = {
-      courseId: courseId,
+      courseId: course?.courseId,
       testId: testId,
       data: []
     };
@@ -74,6 +86,15 @@ function CoursePage() {
     console.log('Submitting: ',data)
     try {
       const res = await API.addTest(data)
+      console.log('Status:', res);
+      if (res?.success) {
+        alert('Test Added Successfully!');
+       
+        // Clear the form inputs
+        setCsvData(null); // Clear the CSV data
+        setTestId('');  
+      }
+    
     } catch (error) {
       console.log('[ERR]: Cannot Add Test', error)
     }
@@ -138,7 +159,7 @@ function CoursePage() {
 
   return (
     <div className="CoursePage">
-      <h1 className="text-3xl font-bold dark:text-white">Course Title</h1>
+      <h1 className="text-3xl font-bold dark:text-white">{course?.courseName} - {course?.courseId}</h1>
 
 
 
@@ -147,11 +168,11 @@ function CoursePage() {
        
        <div className="">
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload CSV file</label>
-        <CsvFileInput onFileLoad={handleFileUpload}/>
+        <CsvFileInput onFileLoad={handleFileUpload} />
        </div>
        <div className="mt-4">
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Test Id</label>
-        <input onChange={e => setTestId(e.target.value)} type="text" placeholder='Enter the test id' className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"/>
+        <input value={testId} onChange={e => setTestId(e.target.value)} type="text" placeholder='Enter the test id' className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"/>
        </div>
 
 

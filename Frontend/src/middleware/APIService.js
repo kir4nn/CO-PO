@@ -21,6 +21,23 @@ const API = {
             throw error
         }
     },
+    getCourses: async() => {
+        try{
+            const response = await api.get('/getAllCourses')
+            return response.data
+        }catch(error){
+            throw error
+        }
+    },
+    getCourse: async(courseId) => {
+        try{
+            const response = await api.get('/getCourse', {params: {courseId}})
+            return response.data
+        }catch(err){
+            throw err
+        }
+    }
+    ,
 
     addTest: async(data) => {
         try {
@@ -32,6 +49,7 @@ const API = {
             throw error
         }
     }
+
 
 
 }

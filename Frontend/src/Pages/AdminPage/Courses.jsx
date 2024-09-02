@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../../middleware/APIService';
 import axios from 'axios';
 import './CourseForm.css';
 
-const CoursesTable = () => {
+const CoursesTable = ({courses}) => {
+
+  
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-fit text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -16,15 +19,21 @@ const CoursesTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Operating Systems</th>
-            <td className="px-6 py-4">22CSXXX</td>
-            <td className="px-6 py-4">
-              <Link to={`/admin/courses/${1234}`}>
-                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-              </Link>
-            </td>
-          </tr>
+
+          {
+            courses?.map(item => (
+              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{item?.courseName}</th>
+                <td className="px-6 py-4">{item?.courseId}</td>
+                <td className="px-6 py-4">
+                  <Link to={`/admin/courses/${item?.courseId}`}>
+                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                  </Link>
+                </td>
+              </tr>
+            ))
+          }
+
         </tbody>
       </table>
     </div>
@@ -44,6 +53,23 @@ function Courses() {
   ]);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+
+  const [courses, setCourses] = useState([])
+
+  useEffect(() => {
+    const fetch = async() => {
+      try {   
+        const res = await API.getCourses();
+        console.log('Courses: ', res.data)
+        setCourses(res.data)
+      } catch (error) {
+        console.log('[ERR] Unable to fetch courses', error)
+      }
+    } 
+    fetch()
+  }, [])
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -152,7 +178,7 @@ function Courses() {
             </form>
           </div>
         )}
-        <CoursesTable />
+        <CoursesTable courses={courses}/>
       </div>
     </div>
   );
