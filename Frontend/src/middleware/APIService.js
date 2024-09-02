@@ -22,6 +22,17 @@ const API = {
         }
     },
 
+    addTest: async(data) => {
+        try {
+            const response = await api.post('/addTest', data)
+            
+            return response.data
+
+        } catch (error) {
+            throw error
+        }
+    }
+
 
 }
 

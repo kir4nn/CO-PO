@@ -18,7 +18,7 @@ const CoursesTable = () => {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Operating Systems</th>
             <td className="px-6 py-4">22CSXXX</td>
             <td className="px-6 py-4">
-              <Link to={`/admin/courses/${123}`}>
+              <Link to={`/admin/courses/${1234}`}>
                 <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
               </Link>
             </td>

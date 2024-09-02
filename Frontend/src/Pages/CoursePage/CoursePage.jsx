@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import Papa from 'papaparse';
 import './CoursePage.css';
+import CsvFileInput from './CSVFileInput';
+import API from '../../middleware/APIService';
+import { useParams } from 'react-router-dom';
 
 function CoursePage() {
+
+  const { courseId } = useParams(); 
   const [courses, setCourses] = useState([]);
   const [showCOPO, setShowCOPO] = useState(false);
   const [showAvgCO, setShowAvgCO] = useState(false);
   const [newCourse, setNewCourse] = useState({ name: '', coAttainment: '' });
   const [copoMatrix, setCOPOMatrix] = useState([]);
   const [newCOPOEntry, setNewCOPOEntry] = useState({ co: '', po1: '', po2: '', po3: '' });
+  
+  const [csvData, setCsvData] = useState(null);
+  const [testId, setTestId] = useState("")
 
   useEffect(() => {
     // Fetch courses from backend
@@ -15,6 +24,63 @@ function CoursePage() {
     // Fetch CO-PO matrix from backend
     fetchCOPOMatrix();
   }, []);
+
+  useEffect(()=>{
+    console.log('CSV: ', csvData);
+  }, [csvData])
+
+  useEffect(()=>{
+    console.log('TestId: ', testId)
+  }, [testId])
+  
+
+  
+  const handleFileUpload = (parsedData) => {
+    console.log('Uploading File...');
+    const formattedData = formatData(parsedData);
+    console.log('Formatted Data:', formattedData);
+    setCsvData(formattedData);
+  };
+
+  const formatData = (data) => {
+    const formattedData = {
+      courseId: courseId,
+      testId: testId,
+      data: []
+    };
+  
+    data.forEach((row, index) => {
+      if (index === 0) {
+        // If it's the header row, push the headers (excluding the first empty cell)
+        formattedData.data.push(["", ...Object.values(row).slice(1)]);
+      } else if (row[""] === "CO") {
+        // If the first cell in the row is "CO", it's the CO row
+        formattedData.data.push(["CO->", ...Object.values(row).slice(1)]);
+      } else if (row[""] === "MaxMarks") {
+        // If the first cell in the row is "MaxMarks", it's the MaxMarks row
+        formattedData.data.push(["MaxMarks", ...Object.values(row).slice(1)]);
+      } else if (row[""] && row[""] !== "USN") {
+        // For student data rows, which have a USN in the first cell
+        formattedData.data.push([row[""], ...Object.values(row).slice(1)]);
+      }
+    });
+  
+    return formattedData;
+  };
+
+  const submitTest = async() => {
+    const data = csvData;
+    data['testId'] = testId
+    console.log('Submitting: ',data)
+    try {
+      const res = await API.addTest(data)
+    } catch (error) {
+      console.log('[ERR]: Cannot Add Test', error)
+    }
+    
+
+  }
+  
 
   const fetchCourses = async () => {
     // TODO: Replace with actual API call
@@ -42,24 +108,12 @@ function CoursePage() {
     ]);
   };
 
-  const addCourse = async () => {
-    const courseToAdd = {
-      name: newCourse.name,
-      coAttainment: newCourse.coAttainment.split(',').map(Number)
-    };
-
-    // TODO: Replace with actual API call
-    // const response = await fetch('/api/courses', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(courseToAdd)
-    // });
-    // const addedCourse = await response.json();
-    // setCourses([...courses, addedCourse]);
-
-    // Placeholder action
-    setCourses([...courses, { ...courseToAdd, id: courses.length + 1 }]);
-    setNewCourse({ name: '', coAttainment: '' });
+  const addCourse = async (data) => {
+    try {
+    
+    } catch (error) {
+      
+    }
   };
 
   const addCOPOEntry = async () => {
@@ -92,10 +146,17 @@ function CoursePage() {
       <h5 class="text-xl font-bold dark:text-white">Add New Test</h5>
        
        <div className="">
-        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload CSV file</label>
-        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" />
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload CSV file</label>
+        <CsvFileInput onFileLoad={handleFileUpload}/>
        </div>
-       <button type="button" class="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+       <div className="mt-4">
+        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Test Id</label>
+        <input onChange={e => setTestId(e.target.value)} type="text" placeholder='Enter the test id' className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"/>
+       </div>
+
+
+
+       <button type="button" onClick={submitTest} class="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
        Add Test
        </button>
       </div>

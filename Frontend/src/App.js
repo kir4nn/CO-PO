@@ -19,7 +19,7 @@ function App() {
               {/* <Route path="bulk-upload" element={<BulkStudentUpload />} /> */}
               <Route path="courses" element={<Courses />}/>
 
-              <Route path="courses/:courseID" element={<CoursePage/>}/>
+              <Route path="courses/:courseId" element={<CoursePage/>}/>
               <Route path="display-po" element={<PODisplay />} />
           </Route>
           <Route path="/course" element={<CoursePage/>} />
