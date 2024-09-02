@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import API from '../../middleware/APIService';
 import axios from 'axios';
 import './CourseForm.css';
 
@@ -56,11 +57,11 @@ function Courses() {
         row.map((cell, index) => index === 0 ? cell : parseInt(cell) || 0)
       );
 
-      const response = await axios.post('http://localhost:5000/addCourse', {
+      const response = await API.addCourse( {
         courseName,
         courseId,
         CO_PO_matrix: formattedMatrix
-      });
+      })
       
       console.log('Course added successfully:', response.data);
       setSuccessMessage('Course added successfully!');
