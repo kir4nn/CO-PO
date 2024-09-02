@@ -6,7 +6,6 @@ import API from '../../middleware/APIService';
 import { useParams } from 'react-router-dom';
 
 function CoursePage() {
-
   const { courseId } = useParams(); 
   const [courses, setCourses] = useState([]);
   const [showCOPO, setShowCOPO] = useState(false);
@@ -19,23 +18,20 @@ function CoursePage() {
   const [testId, setTestId] = useState("")
 
   const [course, setCourse] = useState(null)
-  
 
   useEffect(() => {
-    const fetch = async() => {
-
+    const fetchCourse = async () => {
       try {
-        const res = await API.getCourse(courseId)
-        console.log('Course: ', res)
-        setCourse(res)
+        const res = await API.getCourse(courseId);
+        console.log('Course: ', res);
+        setCourse(res);
       } catch (error) {
-        console.log('[ERR] Unable to fetch course')
+        console.log('[ERR] Unable to fetch course', error);
       }
-      
-    }
+    };
 
-    fetch()
-  }, []);
+    fetchCourse();
+  }, [courseId]);
 
   useEffect(()=>{
     console.log('CSV: ', csvData);
@@ -44,9 +40,7 @@ function CoursePage() {
   useEffect(()=>{
     console.log('TestId: ', testId)
   }, [testId])
-  
 
-  
   const handleFileUpload = (parsedData) => {
     console.log('Uploading File...');
     const formattedData = formatData(parsedData);
@@ -101,169 +95,101 @@ function CoursePage() {
     
 
   }
-  
 
-  const fetchCourses = async () => {
-    // TODO: Replace with actual API call
-    // const response = await fetch('/api/courses');
-    // const data = await response.json();
-    // setCourses(data);
-    
-    // Placeholder data
-    setCourses([
-      { id: 1, name: 'Course 1', coAttainment: [80, 75, 90] },
-      { id: 2, name: 'Course 2', coAttainment: [85, 88, 92] },
-    ]);
-  };
-
-  const fetchCOPOMatrix = async () => {
-    // TODO: Replace with actual API call
-    // const response = await fetch('/api/copo-matrix');
-    // const data = await response.json();
-    // setCOPOMatrix(data);
-    
-    // Placeholder data
-    setCOPOMatrix([
-      { co: 'CO1', po1: 3, po2: 2, po3: 1 },
-      { co: 'CO2', po1: 2, po2: 3, po3: 2 },
-    ]);
-  };
-
-  const addCourse = async (data) => {
-    try {
-    
-    } catch (error) {
-      
-    }
-  };
-
-  const addCOPOEntry = async () => {
-    // TODO: Replace with actual API call
-    // const response = await fetch('/api/copo-matrix', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(newCOPOEntry)
-    // });
-    // const addedEntry = await response.json();
-    // setCOPOMatrix([...copoMatrix, addedEntry]);
-
-    // Placeholder action
-    setCOPOMatrix([...copoMatrix, newCOPOEntry]);
-    setNewCOPOEntry({ co: '', po1: '', po2: '', po3: '' });
-  };
-
-  const getAverageCO = (coAttainment) => {
-    const total = coAttainment.reduce((sum, co) => sum + co, 0);
-    return (total / coAttainment.length).toFixed(2);
+  const calculateAverageCOAttainment = () => {
+    if (!course) return 0;
+    const attainments = [
+      course.CO1_attainment,
+      course.CO2_attainment,
+      course.CO3_attainment,
+      course.CO4_attainment
+    ];
+    const sum = attainments.reduce((acc, val) => acc + val, 0);
+    return (sum / attainments.length).toFixed(2);
   };
 
   return (
     <div className="CoursePage">
       <h1 className="text-3xl font-bold dark:text-white">{course?.courseName} - {course?.courseId}</h1>
 
-
-
       <div className="">
-      <h5 class="text-xl font-bold dark:text-white">Add New Test</h5>
-       
-       <div className="">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload CSV file</label>
-        <CsvFileInput onFileLoad={handleFileUpload} />
-       </div>
-       <div className="mt-4">
-        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Test Id</label>
-        <input value={testId} onChange={e => setTestId(e.target.value)} type="text" placeholder='Enter the test id' className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"/>
-       </div>
+        <h5 className="text-xl font-bold dark:text-white">Add New Test</h5>
+        
+        <div className="">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload CSV file</label>
+          <CsvFileInput onFileLoad={handleFileUpload} />
+        </div>
+        <div className="mt-4">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="test_id">Test Id</label>
+          <input
+            id="test_id"
+            value={testId}
+            onChange={e => setTestId(e.target.value)}
+            type="text"
+            placeholder='Enter the test id'
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          />
+        </div>
 
-
-
-       <button type="button" onClick={submitTest} class="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-       Add Test
-       </button>
+        <button
+          type="button"
+          onClick={submitTest}
+          className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Add Test
+        </button>
       </div>
 
-      <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
-      {/* <div className="course-data">
-        <h2>Courses</h2>
-        <ul>
-          {courses.map((course) => (
-            <li key={course.id}>
-              {course.name} - Avg CO Attainment: {getAverageCO(course.coAttainment)}%
-            </li>
-          ))}
-        </ul>
-      </div> */}
+      <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
 
-      <button onClick={() => setShowCOPO(!showCOPO)} className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+      <button
+        onClick={() => setShowCOPO(!showCOPO)}
+        className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
         {showCOPO ? 'Hide CO-PO Conversion Matrix' : 'Show CO-PO Conversion Matrix'}
       </button>
-      {showCOPO && (
+      {showCOPO && course?.CO_PO_matrix && (
         <div className="copo-matrix">
-          <h2>CO-PO Conversion Matrix</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>CO</th>
-                <th>PO1</th>
-                <th>PO2</th>
-                <th>PO3</th>
-              </tr>
-            </thead>
-            <tbody>
-              {copoMatrix.map((entry, index) => (
-                <tr key={index}>
-                  <td>{entry.co}</td>
-                  <td>{entry.po1}</td>
-                  <td>{entry.po2}</td>
-                  <td>{entry.po3}</td>
+          <h2 className="text-2xl font-bold mb-4">CO-PO Conversion Matrix</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-300">
+              <thead>
+                <tr>
+                  {course.CO_PO_matrix[0].map((header, index) => (
+                    <th key={index} className="border border-gray-300 px-4 py-2">{header}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="add-copo-entry">
-            <h3>Add New CO-PO Entry</h3>
-            <input
-              type="text"
-              placeholder="CO"
-              value={newCOPOEntry.co}
-              onChange={(e) => setNewCOPOEntry({ ...newCOPOEntry, co: e.target.value })}
-            />
-            <input
-              type="number"
-              placeholder="PO1"
-              value={newCOPOEntry.po1}
-              onChange={(e) => setNewCOPOEntry({ ...newCOPOEntry, po1: e.target.value })}
-            />
-            <input
-              type="number"
-              placeholder="PO2"
-              value={newCOPOEntry.po2}
-              onChange={(e) => setNewCOPOEntry({ ...newCOPOEntry, po2: e.target.value })}
-            />
-            <input
-              type="number"
-              placeholder="PO3"
-              value={newCOPOEntry.po3}
-              onChange={(e) => setNewCOPOEntry({ ...newCOPOEntry, po3: e.target.value })}
-            />
-            <button onClick={addCOPOEntry}>Add Entry</button>
+              </thead>
+              <tbody>
+                {course.CO_PO_matrix.slice(1).map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {row.map((cell, cellIndex) => (
+                      <td key={cellIndex} className="border border-gray-300 px-4 py-2">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
-      <button onClick={() => setShowAvgCO(!showAvgCO)} className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+      <button
+        onClick={() => setShowAvgCO(!showAvgCO)}
+        className="my-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
         {showAvgCO ? 'Hide Average CO Attainment' : 'Show Average CO Attainment'}
       </button>
-      {showAvgCO && (
+      {showAvgCO && course && (
         <div className="avg-co-attainment">
-          <h2>Average CO Attainment</h2>
-          <ul>
-            {courses.map((course) => (
-              <li key={course.id}>
-                {course.name} - {getAverageCO(course.coAttainment)}%
-              </li>
-            ))}
+          <h2 className="text-2xl font-bold mb-4">CO Attainments</h2>
+          <ul className="list-disc list-inside">
+            <li>CO1: {course.CO1_attainment}</li>
+            <li>CO2: {course.CO2_attainment}</li>
+            <li>CO3: {course.CO3_attainment}</li>
+            <li>CO4: {course.CO4_attainment}</li>
           </ul>
+          <p className="mt-4 font-bold">Average CO Attainment: {calculateAverageCOAttainment()}</p>
         </div>
       )}
     </div>

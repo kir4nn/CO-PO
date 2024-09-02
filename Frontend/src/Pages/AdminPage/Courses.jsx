@@ -71,41 +71,51 @@ function Courses() {
   }, [])
   
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
-    try {
-      console.log('Sending request to add course...');
-      
-      // Format the matrix data
-      const formattedMatrix = matrix.map(row => 
-        row.map((cell, index) => index === 0 ? cell : parseInt(cell) || 0)
-      );
+  // In your Courses.jsx file, update the handleSubmit function
 
-      const response = await API.addCourse( {
-        courseName,
-        courseId,
-        CO_PO_matrix: formattedMatrix
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError(null);
+  setSuccessMessage(null);
+  try {
+    console.log('Sending request to add course...');
+    
+    // Format the matrix data to include headers and ensure it's 5x13
+    const formattedMatrix = matrix.map(row => 
+      row.map((cell, index) => {
+        if (index === 0 || row === matrix[0]) {
+          return cell; // Keep the headers as strings
+        }
+        return parseInt(cell) || 0; // Convert to integer, default to 0 if NaN
       })
-      
-      console.log('Course added successfully:', response.data);
-      setSuccessMessage('Course added successfully!');
-      setCourseName('');
-      setCourseId('');
-      setMatrix([
-        ["", "PO1", "PO2", "PO3", "PO4", "PO5", "PO6", "PO7", "PO8", "PO9", "PO10", "PSO1", "PSO2"],
-        ["CO1", "", "", "", "", "", "", "", "", "", "", "", ""],
-        ["CO2", "", "", "", "", "", "", "", "", "", "", "", ""],
-        ["CO3", "", "", "", "", "", "", "", "", "", "", "", ""],
-        ["CO4", "", "", "", "", "", "", "", "", "", "", "", ""],
-      ]);
-      setClicked(false);
-    } catch (error) {
-      console.error('Error adding course:', error);
-      setError(error.response?.data?.message || 'An error occurred while adding the course');
-    }
-  };
+    );
+
+    console.log('Formatted matrix:', formattedMatrix);
+
+    const response = await API.addCourse({
+      courseName,
+      courseId,
+      CO_PO_matrix: formattedMatrix
+    });
+    
+    console.log('Course added successfully:', response.data);
+    setSuccessMessage('Course added successfully!');
+    // Reset form fields...
+    setCourseName('');
+    setCourseId('');
+    setMatrix([
+      ["", "PO1", "PO2", "PO3", "PO4", "PO5", "PO6", "PO7", "PO8", "PO9", "PO10", "PSO1", "PSO2"],
+      ["CO1", "", "", "", "", "", "", "", "", "", "", "", ""],
+      ["CO2", "", "", "", "", "", "", "", "", "", "", "", ""],
+      ["CO3", "", "", "", "", "", "", "", "", "", "", "", ""],
+      ["CO4", "", "", "", "", "", "", "", "", "", "", "", ""],
+    ]);
+    setClicked(false);
+  } catch (error) {
+    console.error('Error adding course:', error);
+    setError(error.response?.data?.error || 'An error occurred while adding the course');
+  }
+};
 
   const handleMatrixChange = (rowIndex, colIndex, value) => {
     const newMatrix = [...matrix];

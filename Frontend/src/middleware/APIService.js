@@ -13,9 +13,9 @@ const API = {
             
         }
     },
-    addCourse: async({courseName, courseId, CO_PO_Matrix}) => {
+    addCourse: async(courseData) => {
         try {
-            const response = await api.post()
+            const response = await api.post('/addCourse', courseData)
             return response.data;
         } catch (error) {
             throw error
