@@ -15,7 +15,7 @@ const CsvFileInput = ({ onFileLoad }) => {
           complete: (result) => {
             onFileLoad(result.data); // Pass parsed data to parent component
           },
-          header: true,
+          header: false,
           dynamicTyping: true,
           skipEmptyLines: true,
         });

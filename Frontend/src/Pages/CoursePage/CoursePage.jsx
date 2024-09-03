@@ -54,22 +54,27 @@ function CoursePage() {
       testId: testId,
       data: []
     };
+    console.log('Parsing...')
   
-    data.forEach((row, index) => {
-      if (index === 0) {
-        // If it's the header row, push the headers (excluding the first empty cell)
-        formattedData.data.push(["", ...Object.values(row).slice(1)]);
-      } else if (row[""] === "CO") {
-        // If the first cell in the row is "CO", it's the CO row
-        formattedData.data.push(["CO->", ...Object.values(row).slice(1)]);
-      } else if (row[""] === "MaxMarks") {
-        // If the first cell in the row is "MaxMarks", it's the MaxMarks row
-        formattedData.data.push(["MaxMarks", ...Object.values(row).slice(1)]);
-      } else if (row[""] && row[""] !== "USN") {
-        // For student data rows, which have a USN in the first cell
-        formattedData.data.push([row[""], ...Object.values(row).slice(1)]);
-      }
-    });
+
+     data.forEach((row, index) => {
+    const firstCell = row[0]; // First cell of the row
+    
+    if (firstCell === "Q") {
+      // If the first cell is "Q", treat it as a question row
+      formattedData.data.push(["", ...row.slice(1)]);
+    } else if (firstCell === "CO") {
+      // If the first cell is "CO", treat it as the CO row
+      formattedData.data.push(["CO->", ...row.slice(1)]);
+    } else if (firstCell === "MaxMarks") {
+      // If the first cell is "MaxMarks", treat it as the MaxMarks row
+      formattedData.data.push(["MaxMarks", ...row.slice(1)]);
+    } else if (firstCell && firstCell !== "USN") {
+      // For all other rows with a first cell, treat them as student data rows
+      formattedData.data.push([firstCell, ...row.slice(1)]);
+    }
+  });
+
   
     return formattedData;
   };
